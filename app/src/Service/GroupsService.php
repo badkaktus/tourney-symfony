@@ -6,10 +6,13 @@ declare(strict_types=1);
 namespace App\Service;
 
 
+use App\Entity\Command;
 use App\Entity\Groups;
+use App\Entity\Matches;
 use App\Entity\Tourney;
 use Doctrine\ORM\EntityManagerInterface;
 use JetBrains\PhpStorm\ArrayShape;
+use Tools\Results;
 
 class GroupsService
 {
@@ -86,5 +89,103 @@ SQL;
         }
 
         return $teamsByGroups;
+    }
+
+    /**
+     * Возвращаем команды в группе/турнире
+     *
+     * @param int $tourneyId
+     * @param string $groupLetter
+     * @return array
+     */
+    private function commandsInGroup(int $tourneyId, string $groupLetter): array
+    {
+        return $this->entityManager->getRepository(Groups::class)->findBy(
+            [
+                'tourneyId' => $tourneyId,
+                'groupLetter' => $groupLetter
+            ]
+        );
+    }
+
+    /**
+     * Генерация результатов в группе
+     *
+     * @param int $tourney
+     * @param string $group
+     * @return bool
+     * @throws \Exception
+     */
+    public function generateResults(int $tourneyId, string $groupLetter): bool
+    {
+        $commandsInGroup = $this->commandsInGroup($tourneyId, $groupLetter);
+
+        $commands = [];
+        $commandModels = [];
+        foreach ($commandsInGroup as $item) {
+            $commands[] = $item->getTeamId();
+            $commandModels[$item->getTeamId()] = $item;
+        }
+        $cntCommand = count($commands);
+
+        foreach ($commands as $i => $teamHome) {
+            if (isset($commands[$i + 1])) {
+                for ($y = $i + 1; $y < $cntCommand; $y++) {
+                    if ($teamHome === $commands[$y]) {
+                        continue;
+                    }
+                    $scoreHome = Results::getRandScore();
+                    $scoreAway = Results::getRandScore();
+                    switch ($scoreHome <=> $scoreAway) {
+                        case -1:
+                            // $scoreHome < $scoreAway
+                            $commandModels[$commands[$y]]->setPoints(
+                                $commandModels[$commands[$y]]->getPoints() + 3
+                            );
+                            break;
+
+                        case 1:
+                            // $scoreHome > $scoreAway
+                            $commandModels[$teamHome]->setPoints(
+                                $commandModels[$teamHome]->getPoints() + 3
+                            );
+                            break;
+
+                        case 0:
+                            // =
+                            $commandModels[$commands[$y]]->setPoints(
+                                $commandModels[$commands[$y]]->getPoints() + 1
+                            );
+                            $commandModels[$teamHome]->setPoints(
+                                $commandModels[$teamHome]->getPoints() + 1
+                            );
+                            break;
+                    }
+
+                    $commandHome = $this->entityManager
+                        ->getRepository(Command::class)
+                        ->find($teamHome);
+                    $commandAway = $this->entityManager
+                        ->getRepository(Command::class)
+                        ->find($commands[$y]);
+
+                    $match = new Matches();
+                    $match
+                        ->setRound('g')
+                        ->setGroupLetter($groupLetter)
+                        ->setTourneyId($tourneyId)
+                        ->setScoreHome($scoreHome)
+                        ->setScoreAway($scoreAway)
+                        ->setTeamHome($commandHome)
+                        ->setTeamAway($commandAway);
+
+                    $this->entityManager->persist($match);
+                }
+            }
+        }
+
+        $this->entityManager->flush();
+
+        return true;
     }
 }

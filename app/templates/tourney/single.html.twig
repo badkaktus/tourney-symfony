@@ -16,7 +16,7 @@
                     </div>
                     <div>
                         {% if results.results is not defined or (results.results is defined and results.results.a is not defined) %}
-                            <form method="post" action="/groups/seed">
+                            <form method="post" action="/groups/results">
                                 <input type="hidden" name="group" value="a">
                                 <input type="hidden" name="tourney" value="{{ id }}">
                                 <button type="submit">Генерировать</button>
@@ -65,7 +65,7 @@
                     </div>
                     <div>
                         {% if results.results is not defined or (results.results is defined and results.results.b is not defined) %}
-                            <form method="post" action="/groups/seed">
+                            <form method="post" action="/groups/results">
                                 <input type="hidden" name="group" value="b">
                                 <input type="hidden" name="tourney" value="{{ id }}">
                                 <button type="submit">Генерировать</button>
