@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tourneys{% endblock %}
+
+{% block body %}
+    <h2>Список турниров</h2>
+
+    <ul>
+        {% for tourney in tourneys %}
+            <li>
+                <a href="{{ path('tourney', { id: tourney.id }) }}">
+                    {{ tourney.createdAt|format_datetime(locale='ru') }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    {{ form(tourney_form) }}
+
+{% endblock %}

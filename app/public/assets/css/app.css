@@ -1,0 +1,64 @@
+body {
+    /*background-color: red;*/
+}
+
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.groups {
+    display: grid;
+    grid-template-columns: 700px 700px;
+    grid-column-gap: 50px;
+}
+
+.playoff {
+    width: max-content;
+    min-width: 500px;
+    margin: 50px 0;
+}
+
+.group_grid, .tourney_results {
+    display: flex;
+    flex-direction: column;
+}
+
+.group_row {
+    display: grid;
+    grid-template-columns: 70px 70px 70px 70px 70px 70px 70px 70px 70px 70px;
+}
+
+.group_item {
+    height: 30px;
+    text-align: center;
+    line-height: 2;
+}
+
+.equal-team {
+    background-color: grey;
+}
+
+.po-vertical {
+    display: flex;
+    /*width: 500px;*/
+}
+
+.po-one-round {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    width: 200px;
+}
+
+.po-one-round div {
+    height: 50px;
+    display: flex;
+    justify-content: center; /*Центрирование по горизонтали*/
+    align-items: center;
+}
+
+.winner-span {
+    font-weight: bold;
+}

@@ -1,0 +1,250 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Турнир #{{ id }}{% endblock %}
+
+{% block body %}
+    <h2>Турнир {{ id }}</h2>
+
+    <div class="tourney_results">
+        <div class="groups">
+            <div>
+                <div class="header">
+                    <div>
+                        <h3>
+                            Группа А
+                        </h3>
+                    </div>
+                    <div>
+                        {% if results.results is not defined or (results.results is defined and results.results.a is not defined) %}
+                            <form method="post" action="/groups/seed">
+                                <input type="hidden" name="group" value="a">
+                                <input type="hidden" name="tourney" value="{{ id }}">
+                                <button type="submit">Генерировать</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="group_grid">
+                    <div class="group_row">
+                        <div class="group_item">Teams</div>
+                        {% for team, point in results.groups.a %}
+                            <div class="group_item">{{ results.teamsList[team] }}</div>
+                        {% endfor %}
+                        <div class="group_item">Score</div>
+                    </div>
+                    {% for team, point in results.groups.a %}
+                        <div class="group_row">
+                            <div class="group_item">
+                                {{ results.teamsList[team] }}
+                            </div>
+                            {% for team2, point2 in results.groups.a %}
+                                {% if team == team2 %}
+                                    <div class="group_item equal-team"></div>
+                                {% else %}
+                                    <div class="group_item">
+                                        {% if results.results is defined and results.results.a is defined and results.results.a[team] %}
+                                            {{ results.results.a[team][team2] }}
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                            <div class="group_item">
+                                {{ point }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div>
+                <div class="header">
+                    <div>
+                        <h3>
+                            Группа B
+                        </h3>
+                    </div>
+                    <div>
+                        {% if results.results is not defined or (results.results is defined and results.results.b is not defined) %}
+                            <form method="post" action="/groups/seed">
+                                <input type="hidden" name="group" value="b">
+                                <input type="hidden" name="tourney" value="{{ id }}">
+                                <button type="submit">Генерировать</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="group_grid">
+                    <div class="group_row">
+                        <div class="group_item">Teams</div>
+                        {% for team, point in results.groups.b %}
+                            <div class="group_item">
+                                {{ results.teamsList[team] }}
+                            </div>
+                        {% endfor %}
+                        <div class="group_item">Score</div>
+                    </div>
+                    {% for team, point in results.groups.b %}
+                        <div class="group_row">
+                            <div class="group_item">
+                                {{ results.teamsList[team] }}
+                            </div>
+                            {% for team2, point2 in results.groups.b %}
+                                {% if team == team2 %}
+                                    <div class="group_item equal-team"></div>
+                                {% else %}
+                                    <div class="group_item">
+                                        {% if results.results is defined and results.results.b is defined and results.results.b[team] %}
+                                            {{ results.results.b[team][team2] }}
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                            <div class="group_item">
+                                {{ point }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="playoff">
+            {% if results.results is defined and results.results.a is defined and results.results.b is defined and results.results['4'] is not defined %}
+                <div>
+                    <form method="post" action="/playoff/seed">
+                        <input type="hidden" name="tourney" value="{{ id }}">
+                        <button type="submit">Генерировать результаты плей-офф</button>
+                    </form>
+                </div>
+            {% endif %}
+
+            {% if results.results is defined and results.results['4'] is defined and results.results.a|length == 8 and results.results.b|length == 8 %}
+                <div class="header">
+                    <div>
+                        <h3>
+                            Плей-офф
+                        </h3>
+                    </div>
+                </div>
+
+                <div class="playoff_results">
+                    <div class="po-vertical">
+                        <div id="1-4" class="po-one-round">
+                            {% for k, v in results.results['4'] %}
+                                <div>
+                                    {% if v.firstTeamScore > v.secondTeamScore %}
+                                        {% set firstClass = "winner-span" %}
+                                        {% set secondClass = "" %}
+                                    {% else %}
+                                        {% set secondClass = "winner-span" %}
+                                        {% set firstClass = "" %}
+                                    {% endif %}
+                                    <div>
+                                        <span class="{{ firstClass }}">{{ v.firstTeam }} {{ v.firstTeamScore }}</span>:
+                                        <span class="{{ secondClass }}">{{ v.secondTeamScore }} {{ v.secondTeam }}</span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div id="semifinal" class="po-one-round">
+                            {% for k, v in results.results['2'] %}
+                                <div>
+                                    {% if v.firstTeamScore > v.secondTeamScore %}
+                                        {% set firstClass = "winner-span" %}
+                                        {% set secondClass = "" %}
+                                    {% else %}
+                                        {% set secondClass = "winner-span" %}
+                                        {% set firstClass = "" %}
+                                    {% endif %}
+                                    <div>
+                                        <span class="{{ firstClass }}">{{ v.firstTeam }} {{ v.firstTeamScore }}</span>:
+                                        <span class="{{ secondClass }}">{{ v.secondTeamScore }} {{ v.secondTeam }}</span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div id="semifinal" class="po-one-round">
+                            {% for k, v in results.results['1'] %}
+                                <div>
+                                    {% if v.firstTeamScore > v.secondTeamScore %}
+                                        {% set firstClass = "winner-span" %}
+                                        {% set secondClass = "" %}
+                                    {% else %}
+                                        {% set secondClass = "winner-span" %}
+                                        {% set firstClass = "" %}
+                                    {% endif %}
+                                    <div>
+                                        <span class="{{ firstClass }}">{{ v.firstTeam }} {{ v.firstTeamScore }}</span>:
+                                        <span class="{{ secondClass }}">{{ v.secondTeamScore }} {{ v.secondTeam }}</span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div id="winner" class="po-one-round">
+                            <div>Победитель:&nbsp;<span class="winner-span">
+                                    {% if results.results['1']['0'].firstTeamScore > results.results['1']['0'].secondTeamScore %}
+                                        {% set winnerTeam = results.results['1']['0'].firstTeam %}
+                                        {{ results.results['1']['0'].firstTeam }}
+                                    {% else %}
+                                        {% set winnerTeam = results.results['1']['0'].secondTeam %}
+                                        {{ results.results['1']['0'].secondTeam }}
+                                    {% endif %}
+                                        </span>
+                            </div>
+                        </div>
+                        {# <div id="semifinal" className="po-one-round"> #}
+                        {# {this.state.playoff['2'].map((v, i) => { #}
+                        {# let isFirstWinner = (parseInt(v.firstTeamScore) > parseInt(v.secondTeamScore)) #}
+                        {# return #}
+                        {# <div key={i}> #}
+                        {# <div> #}
+                        {# <span #}
+                        {# className={isFirstWinner ? 'winner-span' : ''}>{v.firstTeam} #}
+                        {# {v.firstTeamScore}</span>: #}
+                        {# <span #}
+                        {# className={!isFirstWinner ? 'winner-span' : ''}>{v.secondTeamScore} #}
+                        {# {v.secondTeam}</span> #}
+                        {# </div> #}
+                        {# </div> #}
+                        {# })} #}
+                        {# </div> #}
+                        {# <div id="final" className="po-one-round"> #}
+                        {# {this.state.playoff['1'].map((v, i) => { #}
+                        {# let isFirstWinner = (parseInt(v.firstTeamScore) > parseInt(v.secondTeamScore)) #}
+                        {# return #}
+                        {# <div key={i}> #}
+                        {# <div> #}
+                        {# <span #}
+                        {# className={isFirstWinner ? 'winner-span' : ''}>{v.firstTeam} #}
+                        {# {v.firstTeamScore}</span>: #}
+                        {# <span #}
+                        {# className={!isFirstWinner ? 'winner-span' : ''}>{v.secondTeamScore} #}
+                        {# {v.secondTeam}</span> #}
+                        {# </div> #}
+                        {# </div> #}
+                        {# })} #}
+                        {# </div> #}
+                        {# <div id="winner" className="po-one-round"> #}
+                        {# <div>Победитель:&nbsp;<span className={'winner-span'}> #}
+                        {# { #}
+                        {# (parseInt(this.state.playoff['1'][0].firstTeamScore) > parseInt(this.state.playoff['1'][0].secondTeamScore)) #}
+                        {# ? this.state.playoff['1'][0].firstTeam #}
+                        {# : this.state.playoff['1'][0].secondTeam #}
+                        {# } #}
+
+                        {# </span> #}
+                        {# </div> #}
+                        {# </div> #}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block footer %}
+    <a href="{{ path('homepage') }}" style="margin-top: 100px">
+        <<< К списку турниров
+    </a>
+{% endblock %}
