@@ -2,25 +2,19 @@
 
 namespace App\Controller;
 
-use App\Entity\Command;
-use App\Entity\Groups;
-use App\Entity\Matches;
 use App\Service\GroupsService;
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Tools\Results;
 
 class GroupsController extends AbstractController
 {
     public function __construct(
         private GroupsService $groupsService
-    )
-    {
+    ) {
     }
 
     /**
@@ -38,7 +32,7 @@ class GroupsController extends AbstractController
             $tourneyId = $request->request->get('tourney');
             $groupLetter = $request->request->get('group');
 
-            if(
+            if (
                 $this->groupsService->generateResults($tourneyId, $groupLetter)
             ) {
                 return $this->redirectToRoute('tourney', ['id' => $tourneyId]);

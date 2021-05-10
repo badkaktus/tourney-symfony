@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-
 namespace App\Service;
-
 
 use App\Entity\Matches;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,8 +11,7 @@ class MatchesService
 {
     public function __construct(
         private EntityManagerInterface $entityManager
-    )
-    {
+    ) {
     }
 
     /**

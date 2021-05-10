@@ -14,10 +14,9 @@ class CommandFixtures extends Fixture
         for ($i = 0; $i < 16; $i++) {
             $command = new Command();
             $command->setName(
-                'Team '. random_int(0, 1000)
+                'Team ' . random_int(0, 1000)
             );
             $manager->persist($command);
-
         }
         $manager->flush();
     }

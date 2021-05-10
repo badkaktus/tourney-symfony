@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-
 namespace App\Service;
-
 
 use App\Entity\Command;
 use App\Entity\Groups;
@@ -162,13 +160,17 @@ SQL;
                             break;
                     }
 
+                    // находим entity для домашней команды
                     $commandHome = $this->entityManager
                         ->getRepository(Command::class)
                         ->find($teamHome);
+
+                    // находим entity для гостевой команды
                     $commandAway = $this->entityManager
                         ->getRepository(Command::class)
                         ->find($commands[$y]);
 
+                    // записываем матч
                     $match = new Matches();
                     $match
                         ->setRound('g')

@@ -110,7 +110,7 @@
         <div class="playoff">
             {% if results.results is defined and results.results.a is defined and results.results.b is defined and results.results['4'] is not defined %}
                 <div>
-                    <form method="post" action="/playoff/seed">
+                    <form method="post" action="/playoff/results">
                         <input type="hidden" name="tourney" value="{{ id }}">
                         <button type="submit">Генерировать результаты плей-офф</button>
                     </form>

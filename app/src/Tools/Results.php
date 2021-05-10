@@ -9,6 +9,8 @@ use Exception;
 class Results
 {
     /**
+     * Возвращает случайное количество забитых голов
+     *
      * @throws Exception
      */
     public static function getRandScore(): int
@@ -17,6 +19,8 @@ class Results
     }
 
     /**
+     * Рекурсивная функция для генерации результатов плей-офф
+     *
      * @throws Exception
      */
     public static function roundResults(array $teams, int $round, array &$res): array
@@ -50,9 +54,9 @@ class Results
             $y++;
         }
 
-        if($round > 1) {
+        if ($round > 1) {
 //            $res[$round]['afterRoundTeams'] = $teams;
-            self::roundResults($teamsInNextRound, $round/2, $res);
+            self::roundResults($teamsInNextRound, $round / 2, $res);
         }
 
         return $res;
