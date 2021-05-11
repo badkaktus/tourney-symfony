@@ -58,6 +58,14 @@ services:
       - '3306'
     volumes:
       - mysql-local-test-db:/var/lib/mysql
+  composer:
+    restart: 'no'
+    depends_on:
+      - "php"
+    image: composer:latest
+    command: install
+    volumes:
+      - ./app:/app
 volumes:
   mysql-local-db:
   mysql-local-test-db:
