@@ -51,10 +51,10 @@ class TourneyController extends AbstractController
             $newTourney = $this->tourneyService->createTourney();
 
             if (
-            $this->groupsService->drawToGroups(
-                $this->commandService->allCommands(),
-                $newTourney->getId()
-            )
+                $this->groupsService->drawToGroups(
+                    $this->commandService->allCommands(),
+                    $newTourney->getId()
+                )
             ) {
                 return $this->redirectToRoute('tourney', ['id' => $newTourney->getId()]);
             }
