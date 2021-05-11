@@ -8,7 +8,7 @@ use App\Entity\Command;
 use App\Entity\Groups;
 use App\Entity\Matches;
 use Doctrine\ORM\EntityManagerInterface;
-use Tools\Results;
+use App\Tools\Results;
 use Doctrine\DBAL\Exception\InvalidArgumentException;
 
 class PlayoffService

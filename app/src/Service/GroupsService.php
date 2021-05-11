@@ -10,7 +10,7 @@ use App\Entity\Matches;
 use App\Entity\Tourney;
 use Doctrine\ORM\EntityManagerInterface;
 use JetBrains\PhpStorm\ArrayShape;
-use Tools\Results;
+use App\Tools\Results;
 
 class GroupsService
 {
