@@ -41,5 +41,23 @@ services:
       - '3306'
     volumes:
       - mysql-local-db:/var/lib/mysql
+  dbtest:
+    image: mysql:latest
+    container_name: 'tourney_db_test'
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'tourney'
+      MYSQL_USER: 'tourney_user'
+      MYSQL_PASSWORD: 'tourney_password'
+      MYSQL_ROOT_PASSWORD: 'root_password'
+      TZ: 'Europe/Moscow'
+    ports:
+      - '3316:3306'
+    expose:
+      - '3306'
+    volumes:
+      - mysql-local-test-db:/var/lib/mysql
 volumes:
   mysql-local-db:
+  mysql-local-test-db:
