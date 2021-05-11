@@ -68,7 +68,7 @@ SQL;
      * Получаем команды в турнире
      *
      * @param int $tourneyId
-     * @return array|array[]
+     * @return array
      */
     #[ArrayShape(['a' => "array", 'b' => "array"])]
     public function commandsInTourney(
