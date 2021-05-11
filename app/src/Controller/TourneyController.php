@@ -47,28 +47,25 @@ class TourneyController extends AbstractController
         $tourneyForm = new Tourney();
         $form = $this->createForm(TourneyFormType::class, $tourneyForm);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $newTourney = $this->tourneyService->createTourney();
+        try {
+            $newTourney = $this->tourneyService->createTourney();
 
-                if (
-                    $this->groupsService->drawToGroups(
-                        $this->commandService->allCommands(),
-                        $newTourney->getId()
-                    )
-                ) {
-                    return $this->redirectToRoute('tourney', ['id' => $newTourney->getId()]);
-                }
-                throw new HttpException(
-                    'Ошибка распределения команд по группам'
-                );
-            } catch (HttpException $e) {
-                throw new HttpException(
-                    'Ошибка создания турнира и распределения команд по группам (' . $e->getMessage() . ')'
-                );
+            if (
+            $this->groupsService->drawToGroups(
+                $this->commandService->allCommands(),
+                $newTourney->getId()
+            )
+            ) {
+                return $this->redirectToRoute('tourney', ['id' => $newTourney->getId()]);
             }
+            throw new HttpException(
+                'Ошибка распределения команд по группам'
+            );
+        } catch (HttpException $e) {
+            throw new HttpException(
+                'Ошибка создания турнира и распределения команд по группам (' . $e->getMessage() . ')'
+            );
         }
-        return $this->redirectToRoute('homepage');
     }
 
     #[Route('/tourney/{id}', name: 'tourney', methods: ['GET'])]
