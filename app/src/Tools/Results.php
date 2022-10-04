@@ -27,6 +27,7 @@ class Results
     {
         $teamsInNextRound = [];
         $y = 0;
+
         for ($i = 0; $i < $round; $i++) {
             do {
                 $scoreFirstTeam = self::getRandScore();
